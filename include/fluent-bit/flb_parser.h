@@ -98,17 +98,17 @@ struct flb_parser *flb_parser_create(char *name, char *format,
 int flb_parser_conf_file(char *file, struct flb_config *config);
 void flb_parser_destroy(struct flb_parser *parser);
 struct flb_parser *flb_parser_get(char *name, struct flb_config *config);
-int flb_parser_do(struct flb_parser *parser, char *buf, size_t length,
+int flb_parser_do(struct flb_parser *parser, const char *buf, size_t length,
                   void **out_buf, size_t *out_size, struct flb_time *out_time);
 
 void flb_parser_exit(struct flb_config *config);
 int flb_parser_tzone_offset(char *str, int len, int *tmdiff);
-int flb_parser_frac(char *str, int len, double *frac, char **end);
-int flb_parser_time_lookup(char *time, size_t tsize, time_t now,
+int flb_parser_frac(const char *str, int len, double *frac, const char **end);
+int flb_parser_time_lookup(const char *time, size_t tsize, time_t now,
                            struct flb_parser *parser,
                            struct tm *tm, double *ns);
-int flb_parser_typecast(char *key, int key_len,
-                        char *val, int val_len,
+int flb_parser_typecast(const char *key, int key_len,
+                        const char *val, int val_len,
                         msgpack_packer *pck,
                         struct flb_parser_types *types,
                         int types_len);

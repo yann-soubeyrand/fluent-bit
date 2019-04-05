@@ -81,7 +81,7 @@ static char ltvs_field[256] = {
 
 
 static int ltsv_parser(struct flb_parser *parser,
-                       char *in_buf, size_t in_size,
+                       const char *in_buf, size_t in_size,
                        msgpack_packer *tmp_pck,
                        char *time_key, size_t time_key_len,
                        time_t *time_lookup, double *tmfrac,
@@ -89,12 +89,12 @@ static int ltsv_parser(struct flb_parser *parser,
 {
     int ret;
     struct tm tm = {0};
-    unsigned char *label = NULL;
+    const unsigned char *label = NULL;
     size_t label_len = 0;
-    unsigned char *field = NULL;
+    const unsigned char *field = NULL;
     size_t field_len = 0;
-    unsigned char *c = (unsigned char *)in_buf;
-    unsigned char *end = c + in_size;
+    const unsigned char *c = (const unsigned char *)in_buf;
+    const unsigned char *end = c + in_size;
     int last_byte;
     int do_pack = FLB_TRUE;
 
@@ -198,7 +198,7 @@ static int ltsv_parser(struct flb_parser *parser,
 }
 
 int flb_parser_ltsv_do(struct flb_parser *parser,
-                       char *in_buf, size_t in_size,
+                       const char *in_buf, size_t in_size,
                        void **out_buf, size_t *out_size,
                        struct flb_time *out_time)
 {

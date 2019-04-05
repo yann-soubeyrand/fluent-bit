@@ -42,8 +42,8 @@ struct flb_pack_state {
     jsmn_parser parser;   /* parser state            */
 };
 
-int flb_json_tokenise(char *js, size_t len, struct flb_pack_state *state);
-int flb_pack_json(char *js, size_t len, char **buffer, size_t *size,
+int flb_json_tokenise(const char *js, size_t len, struct flb_pack_state *state);
+int flb_pack_json(const char *js, size_t len, char **buffer, size_t *size,
                   int *root_type);
 int flb_pack_state_init(struct flb_pack_state *s);
 void flb_pack_state_reset(struct flb_pack_state *s);

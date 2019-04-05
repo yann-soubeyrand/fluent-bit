@@ -40,20 +40,20 @@ struct flb_regex {
 struct flb_regex_search {
     int last_pos;
     OnigRegion *region;
-    unsigned char *str;
-    void (*cb_match) (unsigned char *,          /* name  */
-                      unsigned char *, size_t,  /* value */
+    const unsigned char *str;
+    void (*cb_match) (const unsigned char *,          /* name  */
+                      const unsigned char *, size_t,  /* value */
                       void *);                  /* caller data */
     void *data;
 };
 
 int flb_regex_init();
 struct flb_regex *flb_regex_create(unsigned char *pattern);
-ssize_t flb_regex_do(struct flb_regex *r, unsigned char *str, size_t slen,
+ssize_t flb_regex_do(struct flb_regex *r, const unsigned char *str, size_t slen,
                      struct flb_regex_search *result);
 int flb_regex_parse(struct flb_regex *r, struct flb_regex_search *result,
-                    void (*cb_match) (unsigned char *,          /* name  */
-                                      unsigned char *, size_t,  /* value */
+                    void (*cb_match) (const unsigned char *,          /* name  */
+                                      const unsigned char *, size_t,  /* value */
                                       void *),                  /* caller data */
                     void *data);
 int flb_regex_destroy(struct flb_regex *r);
