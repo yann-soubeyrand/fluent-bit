@@ -29,6 +29,7 @@
 #include <fluent-bit/flb_sds.h>
 #include <fluent-bit/flb_time.h>
 #include <fluent-bit/flb_pack.h>
+#include <fluent-bit/flb_unescape.h>
 
 #include <msgpack.h>
 #include <jsmn/jsmn.h>
@@ -97,6 +98,9 @@ static char *tokens_to_msgpack(const char *js,
     jsmntok_t *t;
     msgpack_packer pck;
     msgpack_sbuffer sbuf;
+    char tmp_buf[256];
+    char *tmp_p = tmp_buf;
+    int tmp_len;
 
     if (arr_size == 0) {
         return NULL;
@@ -126,8 +130,9 @@ static char *tokens_to_msgpack(const char *js,
             msgpack_pack_array(&pck, t->size);
             break;
         case JSMN_STRING:
-            msgpack_pack_str(&pck, flen);
-            msgpack_pack_str_body(&pck, js + t->start, flen);
+            tmp_len = flb_unescape_string(js + t->start, flen, &tmp_p);
+            msgpack_pack_str(&pck, tmp_len);
+            msgpack_pack_str_body(&pck, tmp_p, tmp_len);
             break;
         case JSMN_PRIMITIVE:
             p = js + t->start;
