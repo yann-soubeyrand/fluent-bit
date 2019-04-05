@@ -35,7 +35,7 @@
 
 #define try_to_write_str  flb_utils_write_str
 
-int flb_json_tokenise(char *js, size_t len,
+int flb_json_tokenise(const char *js, size_t len,
                       struct flb_pack_state *state)
 {
     int ret;
@@ -71,10 +71,10 @@ int flb_json_tokenise(char *js, size_t len,
     return 0;
 }
 
-static inline int is_float(char *buf, int len)
+static inline int is_float(const char *buf, int len)
 {
-    char *end = buf + len;
-    char *p = buf;
+    const char *end = buf + len;
+    const char *p = buf;
 
     while (p <= end) {
         if (*p == '.') {
@@ -86,13 +86,13 @@ static inline int is_float(char *buf, int len)
 }
 
 /* Receive a tokenized JSON message and convert it to MsgPack */
-static char *tokens_to_msgpack(char *js,
+static char *tokens_to_msgpack(const char *js,
                                jsmntok_t *tokens, int arr_size, int *out_size,
                                int *last_byte)
 {
     int i;
     int flen;
-    char *p;
+    const char *p;
     char *buf;
     jsmntok_t *t;
     msgpack_packer pck;
@@ -178,7 +178,7 @@ static char *tokens_to_msgpack(char *js,
  * This routine do not keep a state in the parser, do not use it for big
  * JSON messages.
  */
-int flb_pack_json(char *js, size_t len, char **buffer, size_t *size,
+int flb_pack_json(const char *js, size_t len, char **buffer, size_t *size,
                   int *root_type)
 
 {

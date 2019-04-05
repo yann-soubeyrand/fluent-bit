@@ -27,7 +27,7 @@
 #include <fluent-bit/flb_parser_decoder.h>
 
 int flb_parser_json_do(struct flb_parser *parser,
-                       char *in_buf, size_t in_size,
+                       const char *in_buf, size_t in_size,
                        void **out_buf, size_t *out_size,
                        struct flb_time *out_time)
 {

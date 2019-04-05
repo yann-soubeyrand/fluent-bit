@@ -265,7 +265,7 @@ static int get_api_server_info(struct flb_kube *ctx,
     return 0;
 }
 
-static void cb_results(unsigned char *name, unsigned char *value,
+static void cb_results(const unsigned char *name, const unsigned char *value,
                        size_t vlen, void *data)
 {
     struct flb_kube_meta *meta = data;

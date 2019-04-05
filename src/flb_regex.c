@@ -112,13 +112,13 @@ struct flb_regex *flb_regex_create(unsigned char *pattern)
     return r;
 }
 
-ssize_t flb_regex_do(struct flb_regex *r, unsigned char *str, size_t slen,
+ssize_t flb_regex_do(struct flb_regex *r, const unsigned char *str, size_t slen,
                      struct flb_regex_search *result)
 {
     int ret;
-    unsigned char *start;
-    unsigned char *end;
-    unsigned char *range;
+    const unsigned char *start;
+    const unsigned char *end;
+    const unsigned char *range;
     OnigRegion *region;
 
     region = onig_region_new();
@@ -127,7 +127,7 @@ ssize_t flb_regex_do(struct flb_regex *r, unsigned char *str, size_t slen,
     }
 
     /* Search scope */
-    start = (unsigned char *) str;
+    start = str;
     end   = start + slen;
     range = end;
 
@@ -155,8 +155,8 @@ ssize_t flb_regex_do(struct flb_regex *r, unsigned char *str, size_t slen,
 }
 
 int flb_regex_parse(struct flb_regex *r, struct flb_regex_search *result,
-                    void (*cb_match) (unsigned char *,          /* name  */
-                                      unsigned char *, size_t,  /* value */
+                    void (*cb_match) (const unsigned char *,          /* name  */
+                                      const unsigned char *, size_t,  /* value */
                                       void *),                  /* caller data */
                     void *data)
 {

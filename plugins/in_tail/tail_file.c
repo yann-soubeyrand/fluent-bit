@@ -395,7 +395,7 @@ static inline void drop_bytes(char *buf, size_t len, int pos, int bytes)
 }
 
 #ifdef FLB_HAVE_REGEX
-static void cb_results(unsigned char *name, unsigned char *value,
+static void cb_results(const unsigned char *name, const unsigned char *value,
                        size_t vlen, void *data)
 {
     struct flb_hash *ht = data;

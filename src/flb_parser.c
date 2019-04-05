@@ -84,22 +84,22 @@ static unsigned u64_to_str(uint64_t value, char* dst) {
 }
 
 int flb_parser_regex_do(struct flb_parser *parser,
-                        char *buf, size_t length,
+                        const char *buf, size_t length,
                         void **out_buf, size_t *out_size,
                         struct flb_time *out_time);
 
 int flb_parser_json_do(struct flb_parser *parser,
-                       char *buf, size_t length,
+                       const char *buf, size_t length,
                        void **out_buf, size_t *out_size,
                        struct flb_time *out_time);
 
 int flb_parser_ltsv_do(struct flb_parser *parser,
-                       char *buf, size_t length,
+                       const char *buf, size_t length,
                        void **out_buf, size_t *out_size,
                        struct flb_time *out_time);
 
 int flb_parser_logfmt_do(struct flb_parser *parser,
-                         char *buf, size_t length,
+                         const char *buf, size_t length,
                          void **out_buf, size_t *out_size,
                          struct flb_time *out_time);
 
@@ -585,7 +585,7 @@ struct flb_parser *flb_parser_get(char *name, struct flb_config *config)
     return NULL;
 }
 
-int flb_parser_do(struct flb_parser *parser, char *buf, size_t length,
+int flb_parser_do(struct flb_parser *parser, const char *buf, size_t length,
                   void **out_buf, size_t *out_size, struct flb_time *out_time)
 {
 
@@ -658,7 +658,7 @@ int flb_parser_tzone_offset(char *str, int len, int *tmdiff)
     return 0;
 }
 
-int flb_parser_time_lookup(char *time_str, size_t tsize,
+int flb_parser_time_lookup(const char *time_str, size_t tsize,
                            time_t now,
                            struct flb_parser *parser,
                            struct tm *tm, double *ns)
@@ -670,7 +670,7 @@ int flb_parser_time_lookup(char *time_str, size_t tsize,
     char *p = NULL;
     char *fmt;
     int time_len = tsize;
-    char *time_ptr = time_str;
+    const char *time_ptr = time_str;
     char tmp[64];
     char fs_tmp[32];
     struct tm tmy;
@@ -765,19 +765,21 @@ int flb_parser_time_lookup(char *time_str, size_t tsize,
     return -1;
 }
 
-int flb_parser_frac(char *str, int len, double *frac, char **end)
+int flb_parser_frac(const char *str, int len, double *frac, const char **end)
 {
     int ret = 0;
     char *p;
     double d;
-    char *pstr;
+    char *tmp = NULL;
+    const char *pstr;
 
     /* Fractional seconds */
     /* Normalize the fractional seperator to be '.' since that's what strtod()
      * expects in standard C locale */
     if (*str == ',') {
-        pstr = flb_strdup(str);
-        pstr[0] = '.';
+        tmp = flb_strdup(str);
+        tmp[0] = '.';
+        pstr = tmp;
     }
     else {
         pstr = str;
@@ -792,21 +794,21 @@ int flb_parser_frac(char *str, int len, double *frac, char **end)
     *end = str + (p - pstr);
 
 free_and_return:
-    if (pstr != str) {
-        flb_free(pstr);
+    if (tmp) {
+        flb_free(tmp);
     }
     return ret;
 }
 
-int flb_parser_typecast(char *key, int key_len,
-                        char *val, int val_len,
+int flb_parser_typecast(const char *key, int key_len,
+                        const char *val, int val_len,
                         msgpack_packer *pck,
                         struct flb_parser_types *types,
                         int types_len)
 {
     int i;
     int error = FLB_FALSE;
-    char tmp_char;
+    char *tmp;
     int casted = FLB_FALSE;
 
     for(i=0; i<types_len; i++){
@@ -825,24 +827,20 @@ int flb_parser_typecast(char *key, int key_len,
                     long long lval;
 
                     /* msgpack char is not null terminated.
-                       So backup and fill null char,
-                       convert int,
-                       rewind char.
+                       So make a temporary copy.
                      */
-                    tmp_char = val[val_len];
-                    val[val_len] = '\0';
-                    lval = atoll(val);
-                    val[val_len] = tmp_char;
+                    tmp = flb_strndup(val, val_len);
+                    lval = atoll(tmp);
+                    flb_free(tmp);
                     msgpack_pack_int64(pck, lval);
                 }
                 break;
             case FLB_PARSER_TYPE_HEX:
                 {
                     unsigned long long lval;
-                    tmp_char = val[val_len];
-                    val[val_len] = '\0';
-                    lval = strtoull(val, NULL, 16);
-                    val[val_len] = tmp_char;
+                    tmp = flb_strndup(val, val_len);
+                    lval = strtoull(tmp, NULL, 16);
+                    flb_free(tmp);
                     msgpack_pack_uint64(pck, lval);
                 }
                 break;
@@ -850,18 +848,17 @@ int flb_parser_typecast(char *key, int key_len,
             case FLB_PARSER_TYPE_FLOAT:
                 {
                     double dval;
-                    tmp_char = val[val_len];
-                    val[val_len] = '\0';
-                    dval = atof(val);
-                    val[val_len] = tmp_char;
+                    tmp = flb_strndup(val, val_len);
+                    dval = atof(tmp);
+                    flb_free(tmp);
                     msgpack_pack_double(pck, dval);
                 }
                 break;
             case FLB_PARSER_TYPE_BOOL:
-                if (!strncasecmp(val, "true", 4)) {
+                if (!strncasecmp(val, "true", val_len)) {
                     msgpack_pack_true(pck);
                 }
-                else if(!strncasecmp(val, "false", 5)){
+                else if(!strncasecmp(val, "false", val_len)){
                     msgpack_pack_false(pck);
                 }
                 else {

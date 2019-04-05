@@ -62,7 +62,7 @@ static char ident_byte[256] = {
 };
 
 static int logfmt_parser(struct flb_parser *parser,
-                         char *in_buf, size_t in_size,
+                         const char *in_buf, size_t in_size,
                          msgpack_packer *tmp_pck,
                          char *time_key, size_t time_key_len,
                          time_t *time_lookup, double *tmfrac,
@@ -70,12 +70,12 @@ static int logfmt_parser(struct flb_parser *parser,
 {
     int ret;
     struct tm tm = {0};
-    unsigned char *key = NULL;
+    const unsigned char *key = NULL;
     size_t key_len = 0;
-    unsigned char *value = NULL;
+    const unsigned char *value = NULL;
     size_t value_len = 0;
-    unsigned char *c = (unsigned char *)in_buf;
-    unsigned char *end = c + in_size;
+    const unsigned char *c = (const unsigned char *)in_buf;
+    const unsigned char *end = c + in_size;
     int last_byte;
     int do_pack = FLB_TRUE;
     int value_escape = FLB_FALSE;
@@ -236,7 +236,7 @@ static int logfmt_parser(struct flb_parser *parser,
 }
 
 int flb_parser_logfmt_do(struct flb_parser *parser,
-                        char *in_buf, size_t in_size,
+                        const char *in_buf, size_t in_size,
                         void **out_buf, size_t *out_size,
                         struct flb_time *out_time)
 {
