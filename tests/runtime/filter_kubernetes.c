@@ -353,9 +353,19 @@ static void flb_test_options_merge_log_text()
     flb_test_options_merge_log("options_merge-log_text", NULL, 1);
 }
 
+static void flb_test_options_merge_log_escaped_text()
+{
+    flb_test_options_merge_log("options_merge-log_escaped-text", NULL, 1);
+}
+
 static void flb_test_options_merge_log_json()
 {
     flb_test_options_merge_log("options_merge-log_json", NULL, 1);
+}
+
+static void flb_test_options_merge_log_escaped_json()
+{
+    flb_test_options_merge_log("options_merge-log_escaped-json", NULL, 1);
 }
 
 static void flb_test_options_merge_log_invalid_json()
@@ -662,7 +672,9 @@ TEST_LIST = {
     {"kube_core_unescaping_text", flb_test_core_unescaping_text},
     {"kube_core_unescaping_json", flb_test_core_unescaping_json},
     {"kube_options_merge_log_text", flb_test_options_merge_log_text},
+    {"kube_options_merge_log_escaped_text", flb_test_options_merge_log_escaped_text},
     {"kube_options_merge_log_json", flb_test_options_merge_log_json},
+    {"kube_options_merge_log_escaped_json", flb_test_options_merge_log_escaped_json},
     {"kube_options_merge_log_invalid_json", flb_test_options_merge_log_invalid_json},
     {"kube_options_merge_log_trim_enable", flb_test_options_merge_log_trim_enable},
     {"kube_options_merge_log_trim_disable", flb_test_options_merge_log_trim_disable},
