@@ -89,11 +89,6 @@ struct flb_kube {
 
     struct flb_parser *merge_parser;
 
-    /* Temporal buffer to unescape strings */
-    size_t unesc_buf_size;
-    size_t unesc_buf_len;
-    char *unesc_buf;
-
     /*
      * Merge Log Trim: if merge_log is enabled, this flag allows to trim
      * the value and remove any trailing \n or \r.
