@@ -146,9 +146,6 @@ static int merge_log_handler(msgpack_object o,
         ret = flb_parser_do(parser, ctx->unesc_buf, ctx->unesc_buf_len,
                             out_buf, out_size, log_time);
         if (ret >= 0) {
-            if (flb_time_to_double(log_time) == 0) {
-                flb_time_get(log_time);
-            }
             return MERGE_PARSED;
         }
     }
@@ -157,9 +154,6 @@ static int merge_log_handler(msgpack_object o,
                             ctx->unesc_buf, ctx->unesc_buf_len,
                             out_buf, out_size, log_time);
         if (ret >= 0) {
-            if (flb_time_to_double(log_time) == 0) {
-                flb_time_get(log_time);
-            }
             return MERGE_PARSED;
         }
     }
