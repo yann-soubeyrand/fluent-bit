@@ -1,0 +1,1 @@
+[1554141513.598656, {"stream":"stdout", "message":"Simple text", "kubernetes":{"pod_name":"json-without-time", "namespace_name":"annotations-parser", "annotations":{"fluentbit.io/parser":"json-parser-without-time"}, "container_name":"json"}}]
