@@ -26,7 +26,6 @@
 #include <fluent-bit/flb_sds.h>
 #include <fluent-bit/flb_error.h>
 #include <fluent-bit/flb_utils.h>
-#include <fluent-bit/flb_sds.h>
 #include <fluent-bit/flb_time.h>
 #include <fluent-bit/flb_pack.h>
 #include <fluent-bit/flb_unescape.h>
